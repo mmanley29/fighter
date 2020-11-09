@@ -1,2 +1,41 @@
-#This will be our main code block
-print("")
+import arcade
+
+WIDTH = 1500
+HEIGHT = 750
+TITLE = 'Test Window'
+
+class Menu_view(arcade.View):
+    
+    def on_show(self):
+        pass
+    def on_draw(self):
+        arcade.start_render()
+        self.background = arcade.load_texture('/Users/littl/Desktop/School/CSE210/210 Python/game art/background_image.jpg')
+        arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, self.background)
+        arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
+        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
+    
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        instructions_view = Instructions_view()
+        self.window.show_view(instructions_view)
+
+class Instructions_view(arcade.View):
+    
+    def on_show(self):
+        arcade.set_background_color(arcade.color.BLUE_GRAY)
+    
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text('Instructions Screen', WIDTH/2, HEIGHT/2, arcade.color.BLACK, font_size=50, anchor_x='center')
+        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.BLACK, font_size=50, anchor_x='center')
+    
+    def on_mouse_press(self, _x, _y, _button, _modifiers):
+        menu_view = Menu_view()
+        self.window.show_view(menu_view)
+
+
+if __name__ == "__main__":
+    window = arcade.Window(WIDTH, HEIGHT, TITLE)
+    menu_view = Menu_view()
+    window.show_view(menu_view)
+    arcade.run()
