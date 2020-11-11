@@ -54,6 +54,10 @@ summary: decided to make git working for the group and make window working as pr
 updates: I (Choi) made github working with my computer. I will upload instruction how to link local repository
 	to the main repository Mathew created. My instruction is based on Windows.
 
+date: 11.10.2020 (zoom discussion)
 
+summary: Kayleigh and Choi both installed arcarde. Choi was able to open the window on mac but not on Windows.
+       command to download arcade library on Windows "py - m pip install arcade"
+       command to download arcadd library on Mac "pip3 install arcade"
 
 
