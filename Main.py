@@ -1,4 +1,5 @@
 import arcade
+import os.path
 
 WIDTH = 1500
 HEIGHT = 750
@@ -8,12 +9,12 @@ JUMP_SPEED = 30
 TITLE = 'Test Window'
 
 class Menu_view(arcade.View):
-    
     def on_show(self):
         pass
     def on_draw(self):
+        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         arcade.start_render()
-        self.background = arcade.load_texture('/Users/littl/Desktop/School/CSE210/210 Python/game art/background_image.jpg')
+        self.background = arcade.load_texture((folder + 'background_image.jpg'))
         arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, self.background)
         arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
         arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
@@ -23,44 +24,15 @@ class Menu_view(arcade.View):
         window.setup()
         #instructions_view = Instructions_view()
         #self.window.show_view(instructions_view)
-
-class Instructions_view(arcade.View):
-    
-    def on_show(self):
-        arcade.set_background_color(arcade.color.BLUE_GRAY)
-    
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text('Instructions Screen', WIDTH/2, HEIGHT/2, arcade.color.BLACK, font_size=50, anchor_x='center')
-        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.BLACK, font_size=50, anchor_x='center')
-    
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        gameover_view = Gameover_view()
-        self.window.show_view(gameover_view)
-
-class Gameover_view(arcade.View):
-    
-    def on_show(self):
-        arcade.set_background_color(arcade.color.BLUE_GRAY)
-    
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text('Gameover', WIDTH/2, HEIGHT/2, arcade.color.BLACK, font_size=50, anchor_x='center', font_name='MATURASC')
-        #font_name or font type are only .ttf files. Settings -> Personalization -> Fonts to find the proper names.
-        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.BLACK, font_size=50, anchor_x='center')
-    
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        menu_view = Menu_view()
-        self.window.show_view(menu_view)
-
+        
 class MyGame(arcade.Window):
-    
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         arcade.set_background_color(arcade.color.WHITE)
-        self.player_sprite = arcade.Sprite('/Users/littl/Desktop/School/CSE210/210 Python/game art/red_square.jpg', 0.5)
+        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
+        self.player_sprite = arcade.Sprite((folder + 'red_square,jpg'), 0.5)
         self.physics_engine = None
-    
+
     def setup(self):
         arcade.set_background_color(arcade.color.WHITE)
         self.player_list = arcade.SpriteList()
@@ -68,11 +40,11 @@ class MyGame(arcade.Window):
         #Spatial hashing speeds the time it takes to find collisions, but increases the time it takes to move a sprite.
         #use_spatial_hash is set to false by default
         self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 60
+        self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
-
+        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         for x in range(0, 1500, 32):
-            wall = arcade.Sprite('/Users/littl/Desktop/School/CSE210/210 Python/game art/wall.jpg')
+            wall = arcade.Sprite(folder + 'wall.jpg')
             wall.center_x = x
             wall.center_y = 50
             self.wall_list.append(wall)
@@ -107,6 +79,9 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         self.physics_engine.update()
+        #arcade.check_for_collision_with_list()
+        #arcade.check_for_collision()
+        #We can use one of these to help with the collions between players
 
 
 if __name__ == "__main__":
