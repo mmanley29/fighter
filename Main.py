@@ -79,6 +79,11 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         self.physics_engine.update()
+        #colision check for player
+        if self.player_sprite.center_x  > 1500 - 100:
+            self.player_sprite.center_x += -5
+        elif self.player_sprite.center_x < 0 + 30:
+            self.player_sprite.center_x += 5
         #arcade.check_for_collision_with_list()
         #arcade.check_for_collision()
         #We can use one of these to help with the collions between players
