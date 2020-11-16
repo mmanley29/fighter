@@ -29,8 +29,8 @@ class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         arcade.set_background_color(arcade.color.WHITE)
-        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
-        self.player_sprite = arcade.Sprite((folder + 'red_square,jpg'), 0.5)
+        self.folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
+        self.player_sprite = arcade.Sprite((self.folder + 'red_square.jpg'), 0.5)
         self.physics_engine = None
 
     def setup(self):
@@ -39,12 +39,11 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
         #Spatial hashing speeds the time it takes to find collisions, but increases the time it takes to move a sprite.
         #use_spatial_hash is set to false by default
-        self.player_sprite.center_x = 100
+        self.player_sprite.center_x = WIDTH / 2
         self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
-        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         for x in range(0, 1500, 32):
-            wall = arcade.Sprite(folder + 'wall.jpg')
+            wall = arcade.Sprite(self.folder + 'wall.jpg')
             wall.center_x = x
             wall.center_y = 50
             self.wall_list.append(wall)
@@ -80,7 +79,7 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
         self.physics_engine.update()
         #colision check for player
-        if self.player_sprite.center_x  > 1500 - 100:
+        if self.player_sprite.center_x  > 1500 - 30:
             self.player_sprite.center_x += -5
         elif self.player_sprite.center_x < 0 + 30:
             self.player_sprite.center_x += 5
