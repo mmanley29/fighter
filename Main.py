@@ -12,9 +12,11 @@ class Menu_view(arcade.View):
     def on_show(self):
         pass
     def on_draw(self):
-        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
+        directory = os.path.dirname(__file__) #Bro Manley
+        filepath = directory + '/pictures/background_image.jpg'#Bro Manley
+        #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         arcade.start_render()
-        self.background = arcade.load_texture((folder + 'background_image.jpg'))
+        self.background = arcade.load_texture(filepath)
         arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, self.background)
         arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
         arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
@@ -29,8 +31,11 @@ class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         arcade.set_background_color(arcade.color.WHITE)
-        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
-        self.player_sprite = arcade.Sprite((folder + 'red_square,jpg'), 0.5)
+        directory = os.path.dirname(__file__) #Bro Manley
+        filepath = directory + '/pictures/red_square.jpg'
+        #filepath = os.path.join(directory, "/pictures", 'red_square.jpg') #Bro Manley
+        #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
+        self.player_sprite = arcade.Sprite(filepath, 0.5) #Bro Manley
         self.physics_engine = None
         self.total_time = 0.0 # to add time
 
@@ -43,9 +48,11 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
-        folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
+        directory = os.path.dirname(__file__) #Bro Manley
+        filepath = directory + '/pictures/wall.jpg' #Bro Manley
+        #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         for x in range(0, 1500, 32):
-            wall = arcade.Sprite(folder + 'wall.jpg')
+            wall = arcade.Sprite(filepath)
             wall.center_x = x
             wall.center_y = 50
             self.wall_list.append(wall)
@@ -106,11 +113,12 @@ class MyGame(arcade.Window):
 
 
 if __name__ == "__main__":
-    '''
-    view = arcade.Window(WIDTH, HEIGHT, TITLE)
+    
+    #view = arcade.Window(WIDTH, HEIGHT, TITLE)
     menu_view = Menu_view()
-    view.show_view(menu_view)
-    '''
+    #view.show_view(menu_view)
+    
     mygame = MyGame()
+    magame.show_view(menu_view)
     mygame.setup()
     arcade.run()
