@@ -61,3 +61,10 @@ summary: Kayleigh and Choi both installed arcarde. Choi was able to open the win
        command to download arcadd library on Mac "pip3 install arcade"
 
 
+date: 11.17.2020 (zoom discussion)
+
+summary: Kayleigh and Mathew will add player health gage and kicking & punching animation for the player
+       Choi and Fulgence will add a timer and also make background image more like 3 d picture
+       Mathew suggested to add multiple layer of background to make it look like 3d.
+       (https://arcade.academy/examples/timer.html) # a tutorial for timer
+       Choi added timer but it still needs modification. See Main.py for the changes.

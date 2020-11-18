@@ -32,6 +32,7 @@ class MyGame(arcade.Window):
         folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         self.player_sprite = arcade.Sprite((folder + 'red_square,jpg'), 0.5)
         self.physics_engine = None
+        self.total_time = 0.0 # to add time
 
     def setup(self):
         arcade.set_background_color(arcade.color.WHITE)
@@ -50,11 +51,24 @@ class MyGame(arcade.Window):
             self.wall_list.append(wall)
         
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
+        self.total_time = 0.0 # to add time
 
     def on_draw(self):
         arcade.start_render()
         self.wall_list.draw()
         self.player_list.draw()
+
+        # Calculate minutes
+        minutes = int(self.total_time) // 60
+
+        # Calculate seconds by using a modulus (remainder)
+        seconds = int(self.total_time) % 60
+
+        # Figure out time output
+        output = (f"Time: {minutes:02d}:{seconds:02d}")
+
+        # Output the timer text.
+        arcade.draw_text(output, 300, 300, arcade.color.RED, 30)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -84,6 +98,8 @@ class MyGame(arcade.Window):
             self.player_sprite.center_x += -5
         elif self.player_sprite.center_x < 0 + 30:
             self.player_sprite.center_x += 5
+        
+        self.total_time += delta_time
         #arcade.check_for_collision_with_list()
         #arcade.check_for_collision()
         #We can use one of these to help with the collions between players
