@@ -1,9 +1,11 @@
 import arcade
 import os.path
 
+#https://github.com/njbittner/battle-bros-pyarcade sample fighter game
+
 WIDTH = 1500
 HEIGHT = 750
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 10
 GRAVITY = 1
 JUMP_SPEED = 30
 TITLE = 'Test Window'
@@ -24,13 +26,22 @@ class Menu_view(arcade.View):
         window.setup()
         #instructions_view = Instructions_view()
         #self.window.show_view(instructions_view)
+
+    class Health_bars():
+        #This class and method should be able to replace the rectangle and text draw in the on_draw method of the MyGame class
+        def on_draw(self):
+            arcade.start_render()
+            arcade.draw_rectangle_outline(225, 720, 400, 50, arcade.color.BLACK, 2)
+            arcade.draw_rectangle_outline(1275, 720, 400, 50, arcade.color.BLACK, 2)   
+            arcade.draw_text('Player 1', 225, 660, arcade.color.BURGUNDY, font_size= 25, font_name= 'britanic', align='left')     
         
 class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(WIDTH, HEIGHT, TITLE)
         arcade.set_background_color(arcade.color.WHITE)
         self.folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
-        self.player_sprite = arcade.Sprite((self.folder + 'red_square.jpg'), 0.5)
+        self.player_sprite = None
+        self.wall_list = None
         self.physics_engine = None
 
     def setup(self):
@@ -39,6 +50,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
         #Spatial hashing speeds the time it takes to find collisions, but increases the time it takes to move a sprite.
         #use_spatial_hash is set to false by default
+        self.player_sprite = arcade.Sprite((self.folder + 'red_square.jpg'), 0.5)
         self.player_sprite.center_x = WIDTH / 2
         self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
@@ -47,11 +59,14 @@ class MyGame(arcade.Window):
             wall.center_x = x
             wall.center_y = 50
             self.wall_list.append(wall)
-        
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
 
     def on_draw(self):
         arcade.start_render()
+        arcade.draw_rectangle_outline(225, 720, 400, 40, arcade.color.BLACK, 2)
+        arcade.draw_rectangle_outline(1275, 720, 400, 40, arcade.color.BLACK, 2)   
+        arcade.draw_text('Player 1', 25, 660, arcade.color.BURGUNDY, font_size= 20, font_name= 'BRITANIC')
+        arcade.draw_text('Player 2', 1375, 660, arcade.color.BURGUNDY, font_size=20,font_name='BRITANIC')
         self.wall_list.draw()
         self.player_list.draw()
 
@@ -80,9 +95,9 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
         #colision check for player
         if self.player_sprite.center_x  > 1500 - 30:
-            self.player_sprite.center_x += -5
+            self.player_sprite.center_x += -10 #this value must match the movement speed constant
         elif self.player_sprite.center_x < 0 + 30:
-            self.player_sprite.center_x += 5
+            self.player_sprite.center_x += 10 #this value must match the movement speed constant
         #arcade.check_for_collision_with_list()
         #arcade.check_for_collision()
         #We can use one of these to help with the collions between players
