@@ -3,7 +3,7 @@ import os.path
 
 WIDTH = 1500
 HEIGHT = 750
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 10
 GRAVITY = 1
 JUMP_SPEED = 30
 TITLE = 'Test Window'
@@ -11,8 +11,8 @@ TITLE = 'Test Window'
 class Menu_view(arcade.View):
     def __init__(self):
         super().__init__()
-        directory = os.path.dirname(__file__) #Bro Manley
-        self.filepath = directory + '/pictures/background_image.jpg'#Bro Manley
+        self.directory = os.path.dirname(__file__) #Bro Manley
+        self.filepath = self.directory + '/pictures/background_image.jpg'#Bro Manley
         
     def on_draw(self):
         #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
@@ -31,12 +31,12 @@ class MyGame(arcade.View):
     def __init__(self):
         super().__init__()
         #arcade.set_background_color(arcade.color.WHITE)
-        directory = os.path.dirname(__file__) #Bro Manley
-        filepath = directory + '/pictures/red_square.jpg'
-        self.background = arcade.load_texture(filepath)
+        self.directory = os.path.dirname(__file__) #Bro Manley
+        self.filepath = self.directory + '/pictures/red_square.jpg'
+        #self.background = arcade.load_texture(filepath)
         #filepath = os.path.join(directory, "/pictures", 'red_square.jpg') #Bro Manley
         #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
-        self.player_sprite = arcade.Sprite(filepath, 0.5) #Bro Manley
+        self.player_sprite = arcade.Sprite(self.filepath, 0.5) #Bro Manley
         self.physics_engine = None
         self.total_time = 0.0 # to add time
 
@@ -44,16 +44,18 @@ class MyGame(arcade.View):
         arcade.set_background_color(arcade.color.WHITE)
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        # self.filepath = self.directory + '/pictures/red_square_punch.jpg'
+        # self.player_list.append(arcade.Sprite(self.filepath, 0.5))
         #Spatial hashing speeds the time it takes to find collisions, but increases the time it takes to move a sprite.
         #use_spatial_hash is set to false by default
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.player_list.append(self.player_sprite)
-        directory = os.path.dirname(__file__) #Bro Manley
-        filepath = directory + '/pictures/wall.jpg' #Bro Manley
+        self.directory = os.path.dirname(__file__) #Bro Manley
+        self.filepath = self.directory + '/pictures/wall.jpg' #Bro Manley
         #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         for x in range(0, 1500, 32):
-            wall = arcade.Sprite(filepath)
+            wall = arcade.Sprite(self.filepath)
             wall.center_x = x
             wall.center_y = 50
             self.wall_list.append(wall)
@@ -80,7 +82,7 @@ class MyGame(arcade.View):
         output = (f"Time: {minutes:02d}:{seconds:02d}")
 
         # Output the timer text.
-        arcade.draw_text(output, 300, 300, arcade.color.RED, 30)
+        arcade.draw_text(output, 650, 700, arcade.color.RED, 30)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -92,6 +94,8 @@ class MyGame(arcade.View):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = MOVEMENT_SPEED
+        # elif key == arcade.key.J:
+        #     self.player_sprite = self.player_list[1]
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -102,14 +106,16 @@ class MyGame(arcade.View):
             self.player_sprite.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
+        # elif key == arcade.key.J:
+        #     self.player_sprite = self.player_list[0]
 
     def on_update(self, delta_time):
         self.physics_engine.update()
         #colision check for player
-        if self.player_sprite.center_x  > 1500 - 100:
-            self.player_sprite.center_x += -5
+        if self.player_sprite.center_x  > 1500 - 30:
+            self.player_sprite.center_x += -10
         elif self.player_sprite.center_x < 0 + 30:
-            self.player_sprite.center_x += 5
+            self.player_sprite.center_x += 10
         
         self.total_time += delta_time
         #arcade.check_for_collision_with_list()
