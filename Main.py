@@ -9,19 +9,23 @@ JUMP_SPEED = 30
 TITLE = 'Test Window'
 
 class Menu_view(arcade.View):
-    def on_draw(self):
+    def __init__(self):
+        super().__init__()
         directory = os.path.dirname(__file__) #Bro Manley
-        filepath = directory + '/pictures/background_image.jpg'#Bro Manley
+        self.filepath = directory + '/pictures/background_image.jpg'#Bro Manley
+        
+    def on_draw(self):
         #folder = os.path.dirname(os.path.abspath(__file__)) + "\pictures\\"
         arcade.start_render()
-        self.background = arcade.load_texture(filepath)
+        self.background = arcade.load_texture(self.filepath)
         arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, self.background)
         arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
-        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
+        arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=25, anchor_x='center')
     
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         mygame = MyGame()
         mygame.setup()
+        self.window.show_view(mygame)
 
 class MyGame(arcade.View):
     def __init__(self):
