@@ -3,31 +3,28 @@ import os.path
 
 WIDTH = 1500
 HEIGHT = 750
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 10
 GRAVITY = 1
 JUMP_SPEED = 30
 TITLE = 'Test Window'
 
 class Menu_view(arcade.View):
-    def on_show(self):
-        pass
     def on_draw(self):
         directory = os.path.dirname(__file__) #Bro Manley
         filepath = directory + '/pictures/background_image.jpg'#Bro Manley
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, filepath)
+        #arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, filepath)
         arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
         arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
     
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        window = MyGame()
-        window.setup()
-        #instructions_view = Instructions_view()
-        #self.window.show_view(instructions_view)
+        mygame = MyGame()
+        mygame.setup()
+        self.window.show_view(mygame)
         
-class MyGame(arcade.Window):
+class MyGame(arcade.View):
     def __init__(self):
-        super().__init__(WIDTH, HEIGHT, TITLE)
+        super().__init__()
         directory = os.path.dirname(__file__) # Load all directory path for image files.Choi
         self.background = None #variable used in draw function to show background image.Choi
         filepath_seagull = directory + '/pictures/seagull.png'
@@ -61,6 +58,10 @@ class MyGame(arcade.Window):
         arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, self.background) # display McDonald background first.Choi
         self.wall_list.draw() # display bottom green floor on top of McDonald background.Choi
         self.player_list.draw() # display red square(player).Choi
+        arcade.draw_rectangle_outline(225, 720, 400, 40, arcade.color.BLACK, 2)
+        arcade.draw_rectangle_outline(1275, 720, 400, 40, arcade.color.BLACK, 2)   
+        arcade.draw_text('Player 1', 25, 660, arcade.color.BURGUNDY, font_size= 20, font_name= 'BRITANIC')
+        arcade.draw_text('Player 2', 1375, 660, arcade.color.BURGUNDY, font_size=20,font_name='BRITANIC')
         
         minutes = int(self.total_time) // 60 # Calculate minutes.Choi   
         seconds = int(self.total_time) % 60 # Calculate seconds by using a modulus (remainder).Choi
@@ -93,9 +94,9 @@ class MyGame(arcade.Window):
 
         #colision check for player
         if self.player_sprite.center_x  > WIDTH - 30:
-            self.player_sprite.center_x += -5
+            self.player_sprite.center_x += -10
         elif self.player_sprite.center_x < 0 + 30:
-            self.player_sprite.center_x += 5
+            self.player_sprite.center_x += 10
         
         self.total_time += delta_time #Update time.Choi
         #arcade.check_for_collision_with_list()
@@ -105,10 +106,7 @@ class MyGame(arcade.Window):
 
 if __name__ == "__main__":
     
-    #view = arcade.Window(WIDTH, HEIGHT, TITLE)
-    #menu_view = Menu_view()
-    #view.show_view(menu_view)
-    
-    mygame = MyGame()
-    mygame.setup()
+    view = arcade.Window(WIDTH, HEIGHT, TITLE)
+    menu_view = Menu_view()
+    view.show_view(menu_view)
     arcade.run()
