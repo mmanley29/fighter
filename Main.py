@@ -13,7 +13,7 @@ class Menu_view(arcade.View):
         directory = os.path.dirname(__file__) #Bro Manley
         filepath = directory + '/pictures/background_image.jpg'#Bro Manley
         arcade.start_render()
-        #arcade.draw_lrwh_rectangle_textured(0, 0, WIDTH, HEIGHT, filepath)
+        arcade.load_texture(filepath).draw_sized(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT)
         arcade.draw_text('Menu Screen', WIDTH/2, HEIGHT/2, arcade.color.WHITE, font_size = 50, anchor_x='center')
         arcade.draw_text('Click to Advance', WIDTH/2, HEIGHT/2 - 75, arcade.color.WHITE, font_size=50, anchor_x='center')
     
