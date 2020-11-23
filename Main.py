@@ -1,10 +1,9 @@
-#Is this now in the animation attempt branch?
 import arcade
 import os.path
 
 WIDTH = 1500
 HEIGHT = 750
-MOVEMENT_SPEED = 10
+MOVEMENT_SPEED = 5
 GRAVITY = 1
 JUMP_SPEED = 30
 TITLE = 'Test Window'
@@ -22,20 +21,50 @@ class Menu_view(arcade.View):
         mygame = MyGame()
         mygame.setup()
         self.window.show_view(mygame)
-        
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.filepath = os.path.dirname(__file__) + '/pictures/'
+        self.scale = 0.5
+        self.textures = []
+        texture = arcade.load_texture(self.filepath + 'red_square.jpg')
+        self.textures.append(texture)
+        texture = arcade.load_texture(self.filepath + 'red_square.jpg', flipped_horizontally=True)
+        self.textures.append(texture)
+        texture = arcade.load_texture(self.filepath + 'red_square_punch.png')
+        self.textures.append(texture)
+        self.texture = self.textures[0]
+    
+    def update(self):
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+        if self.change_x < 0:
+            self.texture = self.textures[1]
+            #moving left
+        elif self.change_x > 0:
+            self.texture = self.textures[0]
+            #moving right
+        elif key == arcade.key.J:
+            self.texture = self.textures[2]
+
+
 class MyGame(arcade.View):
     def __init__(self):
         super().__init__()
         directory = os.path.dirname(__file__) # Load all directory path for image files.Choi
         self.background = None #variable used in draw function to show background image.Choi
-        filepath_seagull = directory + '/pictures/seagull.png'
-        self.player_sprite = arcade.Sprite(filepath_seagull, 2) #variable to show the player with a scale.Choi
+        filepath = directory + '/pictures/'
+        self.player_sprite = None
+        #self.player_sprite = arcade.Sprite(filepath, 0.5) #variable to show the player with a scale.Choi
         self.physics_engine = None
         self.total_time = 0.0 # to add time.Choi
 
+
     def setup(self):
-        self.player_list = arcade.SpriteList()
+        self.player_list = arcade.SpriteList()        
+        self.player_sprite = Player()
         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+        self.player_list.append(self.player_sprite)
         #Spatial hashing speeds the time it takes to find collisions, but increases the time it takes to move a sprite.
         #use_spatial_hash is set to false by default
         self.player_sprite.center_x = 100
@@ -48,7 +77,7 @@ class MyGame(arcade.View):
         for x in range(0, 1500, 32):
             wall = arcade.Sprite(filepath_wall)
             wall.center_x = x
-            wall.center_y = 50
+            wall.center_y = 40
             self.wall_list.append(wall)
         
         self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, self.wall_list, GRAVITY)
@@ -79,6 +108,8 @@ class MyGame(arcade.View):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = MOVEMENT_SPEED
+        elif key == arcade.key.J:
+            self.player_sprite.update()
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -89,11 +120,13 @@ class MyGame(arcade.View):
             self.player_sprite.change_x = 0
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
+        elif key == arcade.key.J:
+            self.player_sprite.update()
 
     def on_update(self, delta_time):
         self.physics_engine.update()
-
-        #colision check for player
+        self.player_list.update()
+        #collision check for player
         if self.player_sprite.center_x  > WIDTH - 30:
             self.player_sprite.center_x += -10
         elif self.player_sprite.center_x < 0 + 30:
