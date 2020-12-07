@@ -26,28 +26,45 @@ class Menu_view(arcade.View):
 class Player(arcade.Sprite):
     def __init__(self):
         super().__init__()
+        self.cur_texture = 0
         self.is_jumping = False
-        filepath = os.path.dirname(__file__) + '/pictures/red_square'
+        filepath = os.path.dirname(__file__) + '/pictures/'
         self.scale = 0.5
-        self.character_textures = []
-        self.texture = arcade.load_texture(filepath + '.jpg')
-        self.character_textures.append(self.texture)
-        self.texture = arcade.load_texture(filepath + '_punch.png')
-        self.character_textures.append(self.texture)
-        self.texture = self.character_textures[0]
+        self.walking_textures = []
+        self.punch_textures = []
+        for i in range(1, 9):
+            self.texture = arcade.load_texture(filepath + f'walking_animation/SQ_W{i}.png')
+            self.walking_textures.append(self.texture)
+        for i in range(1,3):
+            self.texture = arcade.load_texture(filepath + f'punch_animation/SQ_P{i}.png')
+            self.punch_textures.append(self.texture)
+        self.texture = self.walking_textures[0]
         self.center_x = 100
         self.center_y = 100
+        self.collisions = 0
 
 
-    def update_animation(self, key = None):
-        if key == arcade.key.J:
-            self.texture = self.character_textures[1]
-        self.texture = self.character_textures[0]
+    def update_animation(self, key = None, is_attacking = None, delta_time: float = 1/60):
+        if key == arcade.key.J and is_attacking:
+            self.cur_texture += 1
+            if self.cur_texture > 3:
+                self.cur_texture = 0
+            self.texture = self.punch_textures[self.cur_texture]
+            return
+        
+        if self.change_x == 0:
+            self.texture = self.walking_textures[0]
+            return
+
+        self.cur_texture += 1
+        if self.cur_texture > 7:
+            self.cur_texture = 0
+        self.texture = self.walking_textures[self.cur_texture]
 
     def update_health_bars(self):
-        collisions = 1
+        self.collisions += 1
         arcade.start_render()
-        arcade.draw_rectangle_filled(225, 720, (HEALTH_BAR_LENGTH - (collisions * 10)), 30, arcade.color.BLUE_GRAY)
+        arcade.draw_rectangle_filled(225, 720, (HEALTH_BAR_LENGTH - (self.collisions * 10)), 30, arcade.color.BLUE_GRAY)
 
 
 class Enemy(arcade.Sprite):
@@ -74,6 +91,7 @@ class MyGame(arcade.View):
         self.up_pressed = False
         self.down_pressed = False
         self.jump_needs_reset = False   
+        self.is_attacking = False
         self.total_time = 0.0 # to add time.Choi
 
     def setup(self):
@@ -132,7 +150,8 @@ class MyGame(arcade.View):
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
         elif key == arcade.key.J:
-            self.player_sprite.update_animation(key)
+            self.is_attacking = True            
+            self.player_sprite.update_animation(key, self.is_attacking)
         self.process_keychange()
 
     def on_key_release(self, key, modifiers):
@@ -144,7 +163,8 @@ class MyGame(arcade.View):
         elif key == arcade.key.RIGHT:
             self.right_pressed = False
         elif key == arcade.key.J:
-            self.player_sprite.update_animation(key)
+            self.is_attacking = False
+            self.player_sprite.update_animation(key, self.is_attacking)
         self.process_keychange()
 
     def on_update(self, delta_time):
@@ -162,11 +182,12 @@ class MyGame(arcade.View):
         elif self.player_sprite.center_y > HEIGHT:
             self.player_sprite.center_y -= MOVEMENT_SPEED
 
+        self.player_list.update_animation(delta_time)
         for enemy in self.enemy_list:
             hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.enemy_list)
             for enemy in hit_list:
                 enemy.remove_from_sprite_lists()
-                self.player_sprite.center_x -= MOVEMENT_SPEED + 60
+                self.player_sprite.center_x -= MOVEMENT_SPEED + 100
                 self.player_sprite.update_health_bars()
 
         self.total_time += delta_time #Update time.Choi
